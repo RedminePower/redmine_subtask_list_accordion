@@ -27,3 +27,7 @@ Tested on:
 1. Download the plugin `git clone https://github.com/RedminePower/redmine_subtask_list_accordion.git`
 1. Run the plugin migrations `bundle exec rake redmine:plugins:migrate RAILS_ENV=production`
 1. Restart your Redmine web server
+
+## Credits
+
+This plugin is forked from https://github.com/sk-ys/redmine_subtask_list_accordion
