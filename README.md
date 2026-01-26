@@ -12,7 +12,7 @@ Server mode is faster than client mode, but server mode is tradeoff other subtas
 
 ## Compatibility
 
-Redmine 3.2 or 3.3 or 3.4 or 4.0 or 5.0 stable
+Redmine 3.2 - 6.1 stable
 
 Tested on:
 * 3.2.9
@@ -20,6 +20,8 @@ Tested on:
 * 3.4.8
 * 4.0.1
 * 5.0.5
+* 5.1.11
+* 6.1.1
 
 ## Installation
 
