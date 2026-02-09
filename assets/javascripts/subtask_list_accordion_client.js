@@ -188,10 +188,10 @@ function selectedTreeClose() {
 function allExpandNext() {
   var parentTR = slaTRs.filter("tr:has(td.checkbox > input:checked)");
   if (parentTR.length != 1) {
-    exit;
+    return;
   }
   if (!parentTR.hasClass("haschild")) {
-    exit;
+    return;
   }
 
   //make rank

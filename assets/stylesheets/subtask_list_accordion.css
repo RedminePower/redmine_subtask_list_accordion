@@ -17,11 +17,11 @@
 }
 
 .accordion_control a.subtask_all_expand {
-  background-image: url(../../../images/arrow_down.png);
+  background-image: url(../images/arrow_down.png);
 }
 
 .accordion_control a.subtask_all_collapse {
-  background-image: url(../../../images/arrow_right.png);
+  background-image: url(../images/arrow_right.png);
 }
 
 tr.issue.idnt td.subject {background: none;}
@@ -49,21 +49,28 @@ tr.issue.haschild > td.subject > span.treearrow {
 }
 
 tr.issue.haschild.collapse > td.subject > span.treearrow {
-  background: url(../../../images/arrow_right.png) no-repeat 2px 50%;
+  background: url(../images/arrow_right.png) no-repeat 2px 50%;
 }
 
 tr.issue.haschild.expand > td.subject > span.treearrow {
-  background: url(../../../images/arrow_down.png) no-repeat 2px 50%;
+  background: url(../images/arrow_down.png) no-repeat 2px 50%;
+}
+
+/*
+ * Redmine 6.x ではアセットパイプラインにより /public/images/ が存在しないため、
+ * アイコン画像をプラグイン自身の assets/images/ に同梱している。
+ */
+.icon-arrow-expanded,
+.icon-arrow-collapsed {
+  background-position: 5px 50%;
+  background-repeat: no-repeat;
+  padding-left: 20px;
 }
 
 .icon-arrow-expanded {
-  background-position: 5px 50%;
-  background-image: url(../../../images/arrow_down.png);
-  background-repeat: no-repeat;
+  background-image: url(../images/arrow_down.png);
 }
 
 .icon-arrow-collapsed {
-  background-position: 5px 50%;
-  background-image: url(../../../images/arrow_right.png);
-  background-repeat: no-repeat;
+  background-image: url(../images/arrow_right.png);
 }

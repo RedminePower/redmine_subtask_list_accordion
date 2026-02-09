@@ -65,10 +65,10 @@ function selectedTreeClose() {
 function allExpandNext() {
   var parentTR = slaTRs.filter("tr:has(td.checkbox > input:checked)");
   if (parentTR.length != 1) {
-    exit;
+    return;
   }
   if (!parentTR.hasClass("haschild")) {
-    exit;
+    return;
   }
 
   for (var rank = 0; rank <= parentTR.attr("rank") - 0; rank++) {
@@ -103,9 +103,6 @@ $(document).ready(function () {
         .filter(".haschild")
         .removeClass("collapse")
         .addClass("expand");
-
-      //for debug
-      if (slaTRs.filter("tr:visible").length != slaTRs.length) alert("NG");
 
       return false;
     });

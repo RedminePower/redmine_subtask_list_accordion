@@ -90,19 +90,20 @@ module RedmineSubtaskListAccordion
         end
       end
 
-      def expand_tree_at_first?(issue, child)
+      def expand_tree_at_first?(issue, child = nil)
         expand_all = Setting.plugin_redmine_subtask_list_accordion['expand_all']
         if expand_all
           collapsed_trackers = Setting.plugin_redmine_subtask_list_accordion['collapsed_trackers']
           collapsed_tracker_ids = Setting.plugin_redmine_subtask_list_accordion['collapsed_tracker_ids']
 
+          # Migration: Convert old regex-based setting to new ID-based setting (runs once)
           unless collapsed_trackers.blank?
             collapsed_tracker_ids = Tracker.all.select { |t| t.name =~ Regexp.new(collapsed_trackers) }.map(&:id)
             Setting.plugin_redmine_subtask_list_accordion['collapsed_tracker_ids'] = collapsed_tracker_ids
             Setting.plugin_redmine_subtask_list_accordion['collapsed_trackers'] = nil
           end
 
-          if collapsed_tracker_ids.present?
+          if collapsed_tracker_ids.present? && child
             return collapsed_tracker_ids.exclude?(child.tracker.id.to_s)
           end
 
