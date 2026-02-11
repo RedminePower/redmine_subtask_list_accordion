@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 module RedmineSubtaskListAccordion
   module Hooks
     class SubtaskListAccordionHook < Redmine::Hook::ViewListener

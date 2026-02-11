@@ -141,7 +141,7 @@ puts "collapsed_tracker_ids: #{defaults['collapsed_tracker_ids'].inspect}"
 ### [2-1] チケット画面にアコーディオン用クラスが出力される
 
 **前提条件:**
-- 子チケットを持つ親チケットが存在すること
+- 孫チケットを持つ親チケットが存在すること（アコーディオンは孫チケットがある場合のみ有効）
 
 **確認方法:**
 ```powershell
@@ -214,9 +214,36 @@ $response.Content -match "subtasks_default_expand_limit_upper"
 
 ### [2-7] 収縮させるトラッカー設定の動作確認
 
+**テストケース A: collapsed_tracker_ids が空の場合**
+
 **前提条件:**
 - `expand_all` 設定が `true` であること
-- `collapsed_tracker_ids` に特定のトラッカーIDが設定されていること
+- `collapsed_tracker_ids` が空であること
+
+**確認方法:**
+```ruby
+# 設定を変更
+settings = Setting.plugin_redmine_subtask_list_accordion
+settings['expand_all'] = true
+settings['collapsed_tracker_ids'] = []
+Setting.plugin_redmine_subtask_list_accordion = settings
+```
+
+```powershell
+$response = Invoke-WebRequest -Uri "http://localhost:3051/issues/{親チケットID}" -UseBasicParsing
+# すべての子チケットが expand クラスを持つことを確認
+$response.Content -match "issue-{子チケットID}.*expand"
+```
+
+**期待結果:** すべての子チケットが `expand` クラスを持つ（収縮対象なし）
+
+---
+
+**テストケース B: collapsed_tracker_ids が1件の場合**
+
+**前提条件:**
+- `expand_all` 設定が `true` であること
+- `collapsed_tracker_ids` に特定のトラッカーIDが1件設定されていること
 - そのトラッカーの子チケットを持つ親チケットが存在すること
 
 **確認方法:**
@@ -240,6 +267,36 @@ $response.Content -match "issue-{子チケットID}.*collapse"
 
 **期待結果:**
 - 対象トラッカーの子チケットは `collapse` クラスを持つ
+- 対象外のトラッカーの子チケットは `expand` クラスを持つ
+
+---
+
+**テストケース C: collapsed_tracker_ids が複数件の場合**
+
+**前提条件:**
+- `expand_all` 設定が `true` であること
+- `collapsed_tracker_ids` に複数のトラッカーIDが設定されていること
+- それらのトラッカーの子チケットを持つ親チケットが存在すること
+
+**確認方法:**
+```ruby
+# 設定を変更（最初の2つのトラッカーを収縮対象に設定）
+tracker_ids = Tracker.limit(2).pluck(:id).map(&:to_s)
+settings = Setting.plugin_redmine_subtask_list_accordion
+settings['expand_all'] = true
+settings['collapsed_tracker_ids'] = tracker_ids
+Setting.plugin_redmine_subtask_list_accordion = settings
+```
+
+```powershell
+$response = Invoke-WebRequest -Uri "http://localhost:3051/issues/{親チケットID}" -UseBasicParsing
+# 対象トラッカーの子チケット行に "collapse" クラスがあることを確認
+$response.Content -match "issue-{子チケットID_tracker1}.*collapse"
+$response.Content -match "issue-{子チケットID_tracker2}.*collapse"
+```
+
+**期待結果:**
+- 指定した複数のトラッカーの子チケットがすべて `collapse` クラスを持つ
 - 対象外のトラッカーの子チケットは `expand` クラスを持つ
 
 **後処理:**
@@ -327,6 +384,34 @@ $response.Content -match "issue-{子チケットID}.*collapse"
 
 **期待結果:** 子チケットが `collapse` クラスを持つ
 
+---
+
+**テストケース D: expand_all=false の場合（上限が0）**
+
+**前提条件:**
+- `expand_all` 設定が `false` であること
+- ユーザーの `subtasks_default_expand_limit_upper` が `0` であること
+
+**確認方法:**
+```ruby
+# 設定を変更
+settings = Setting.plugin_redmine_subtask_list_accordion
+settings['expand_all'] = false
+Setting.plugin_redmine_subtask_list_accordion = settings
+
+# ユーザー設定を変更（上限を0に設定）
+User.current.pref.subtasks_default_expand_limit_upper = 0
+User.current.pref.save
+```
+
+```powershell
+$response = Invoke-WebRequest -Uri "http://localhost:3051/issues/{親チケットID}" -WebSession $session -UseBasicParsing
+# 子チケットが collapse クラスを持つことを確認（上限0なので常に折りたたみ）
+$response.Content -match "issue-{子チケットID}.*collapse"
+```
+
+**期待結果:** 子チケットが `collapse` クラスを持つ（上限0のため、子チケットが1件以上あれば常に折りたたみ）
+
 **後処理:**
 ```ruby
 # 設定を元に戻す
@@ -379,12 +464,10 @@ Setting.plugin_redmine_subtask_list_accordion = settings
 
 | チケット | 親チケット | subject |
 |---------|-----------|---------|
-| 親1 | - | 親チケット1 |
-| 子1-1 | 親1 | 子チケット1-1 |
-| 子1-2 | 親1 | 子チケット1-2 |
-| 孫1-1-1 | 子1-1 | 孫チケット1-1-1 |
-| 親2 | - | 親チケット2 |
-| 子2-1 | 親2 | 子チケット2-1 |
+| 親1 | - | SLA_BrowserTest_Parent1 |
+| 子1-1 | 親1 | SLA_BrowserTest_Child1-1 |
+| 子1-2 | 親1 | SLA_BrowserTest_Child1-2 |
+| 孫1-1-1 | 子1-1 | SLA_BrowserTest_Grandchild1-1-1 |
 
 ### [3-1] アコーディオン展開/折りたたみ操作
 
@@ -403,9 +486,9 @@ Setting.plugin_redmine_subtask_list_accordion = settings
 
 **確認3:** すべてのサブタスク（子1-1, 子1-2, 孫1-1-1）が表示される
 
-6. 「すべて折りたたむ」リンクをクリック
+6. 「すべて収縮」リンクをクリック
 
-**確認4:** 子チケット以下がすべて非表示になる
+**確認4:** 孫チケットが非表示になる（子チケットは表示されたまま）
 
 ### [3-2] コンテキストメニューからの展開/折りたたみ
 
@@ -419,6 +502,6 @@ Setting.plugin_redmine_subtask_list_accordion = settings
 **確認1:** 子チケット1-1 配下のすべてのチケット（孫1-1-1）が展開される
 
 6. 再度子チケット1-1 を右クリック
-7. 「折りたたむ」をクリック
+7. 「このツリーを収縮」をクリック
 
 **確認2:** 子チケット1-1 配下のチケット（孫1-1-1）が非表示になる

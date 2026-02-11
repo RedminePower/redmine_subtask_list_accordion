@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 require_dependency 'issues_helper'
 
 module RedmineSubtaskListAccordion
@@ -25,7 +27,7 @@ module RedmineSubtaskListAccordion
         trIdx = 0
         #switch by redmine version
         if subtask_list_accordion_tree_render_32?
-          s = '<form><table class="list issues">'
+          s = +'<form><table class="list issues">'
           collapsed_level = 999;
           issue_list(issue.descendants.visible.preload(:status, :priority, :tracker).sort_by(&:lft)) do |child, level|
             if collapsed_level < level
@@ -55,7 +57,7 @@ module RedmineSubtaskListAccordion
           s << '</table></form>'
           s.html_safe
         else
-          s = '<table class="list issues odd-even">'
+          s = +'<table class="list issues odd-even">'
           collapsed_level = 999;
           issue_list(issue.descendants.visible.preload(:status, :priority, :tracker, :assigned_to).sort_by(&:lft)) do |child, level|
             if collapsed_level < level
