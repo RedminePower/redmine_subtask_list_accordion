@@ -1,35 +1,64 @@
 # Redmine Subtask List Accordion
 
-This plugin provide accordion tree to subtask-list on issue.
+チケットの子チケット一覧にアコーディオン機能を追加するプラグインです。
 
-## Features
+## 概要
 
-* Add accordion feature to subtask-list.
-* Add 'Expand this tree', 'Collapse this tree' and 'Expand next level all' to context-menu.
-* Add preferences of expand tree at first time.
-* Add plugin setting for server/client processing mode switch. (server mode default)  
-Server mode is faster than client mode, but server mode is tradeoff other subtask's plugin. (for exsample 'subtask_list_columns' plugin)
+Redmine の子チケット一覧は、階層が深くなると全体を把握しにくくなります。
+このプラグインは、子チケット一覧を折りたたみ/展開できるアコーディオン形式に変換し、
+複雑なチケット構造でも必要な部分だけを表示して作業できるようにします。
 
-## Compatibility
+## 機能
 
-Redmine 3.2 - 6.1 stable
+### アコーディオン表示
 
-Tested on:
-* 3.2.9
-* 3.3.6
-* 3.4.8
-* 4.0.1
-* 5.0.5
-* 5.1.11
-* 6.1.1
+- 子チケット一覧の各階層を折りたたみ/展開可能
+- 子チケット一覧の上部に「すべて展開」「すべて収縮」リンクを追加
+- 右クリックメニューから「このツリーを展開」「このツリーを収縮」「この階層をすべて展開」を選択可能
 
-## Installation
+### プラグイン設定
 
-1. Follow the Redmine plugin installation steps at: http://www.redmine.org/wiki/redmine/Plugins
-1. Download the plugin `git clone https://github.com/RedminePower/redmine_subtask_list_accordion.git`
-1. Run the plugin migrations `bundle exec rake redmine:plugins:migrate RAILS_ENV=production`
-1. Restart your Redmine web server
+| 設定項目 | 説明 |
+|----------|------|
+| サーバー処理モード | 高速だが他プラグインと競合の可能性あり（デフォルト：有効） |
+| デフォルトですべて展開 | 初回表示時にすべての子チケットを展開 |
+| 収縮させるトラッカー | 指定したトラッカーはデフォルトで折りたたむ（すべて展開が有効時のみ） |
 
-## Credits
+### ユーザー設定
 
-This plugin is forked from https://github.com/sk-ys/redmine_subtask_list_accordion
+- 「デフォルトでツリーを展開する時の子チケット数上限」を個人設定で変更可能
+
+## 対応バージョン
+
+- Redmine 5.x（5.1.11 にて動作確認済み）
+- Redmine 6.x（6.1.1 にて動作確認済み）
+
+## インストール
+
+Redmine のインストール先はお使いの環境によって異なります。
+以下の説明では `/var/lib/redmine` を使用しています。
+お使いの環境に合わせて変更してください。
+
+| 環境 | Redmine パス |
+|------|-------------|
+| apt (Debian/Ubuntu) | `/var/lib/redmine` |
+| Docker (公式イメージ) | `/usr/src/redmine` |
+| Bitnami | `/opt/bitnami/redmine` |
+
+以下を実行し、Redmine を再起動してください。
+
+```
+$ cd /var/lib/redmine/plugins
+$ git clone https://github.com/RedminePower/redmine_subtask_list_accordion.git
+$ bundle exec rake redmine:plugins:migrate RAILS_ENV=production
+```
+
+## アンインストール
+
+以下を実行し、Redmine を再起動してください。
+
+```
+$ cd /var/lib/redmine
+$ bundle exec rake redmine:plugins:migrate NAME=redmine_subtask_list_accordion VERSION=0 RAILS_ENV=production
+$ rm -rf plugins/redmine_subtask_list_accordion
+```
