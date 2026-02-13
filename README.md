@@ -8,6 +8,8 @@
 チケットの子チケット一覧にアコーディオン機能を追加するプラグインです。
 階層が深い子チケット一覧を折りたたみ/展開できる形式に変換し、複雑なチケット構造でも必要な部分だけを表示して作業できます。
 
+<img src="images/subtask_list_accordion_01.png" width="600">
+
 詳細は [こちら](https://github.com/RedminePower/redmine_studio_plugin/blob/master/docs/subtask_list_accordion.md) をご覧ください。
 
 ## 対応バージョン

@@ -8,6 +8,8 @@
 A plugin that adds accordion functionality to the subtask list on issues.
 It converts deep subtask hierarchies into a collapsible format, allowing you to display only the parts you need even with complex issue structures.
 
+<img src="images/subtask_list_accordion_01.png" width="600">
+
 For details, see [here](https://github.com/RedminePower/redmine_studio_plugin/blob/master/docs/subtask_list_accordion-en.md).
 
 ## Supported Versions
