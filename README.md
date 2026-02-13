@@ -1,32 +1,14 @@
-# Redmine Subtask List Accordion
+# redmine_subtask_list_accordion
 
-チケットの子チケット一覧にアコーディオン機能を追加するプラグインです。
+> **Tip**: [redmine_studio_plugin](https://github.com/RedminePower/redmine_studio_plugin) を使うと、この機能を含む複数の便利な機能をまとめて管理できます。
+> また、[Redmine Studio](https://www.redmine-power.com/) と組み合わせると、より快適に Redmine をお使いいただけます。
 
 ## 概要
 
-Redmine の子チケット一覧は、階層が深くなると全体を把握しにくくなります。
-このプラグインは、子チケット一覧を折りたたみ/展開できるアコーディオン形式に変換し、
-複雑なチケット構造でも必要な部分だけを表示して作業できるようにします。
+チケットの子チケット一覧にアコーディオン機能を追加するプラグインです。
+階層が深い子チケット一覧を折りたたみ/展開できる形式に変換し、複雑なチケット構造でも必要な部分だけを表示して作業できます。
 
-## 機能
-
-### アコーディオン表示
-
-- 子チケット一覧の各階層を折りたたみ/展開可能
-- 子チケット一覧の上部に「すべて展開」「すべて収縮」リンクを追加
-- 右クリックメニューから「このツリーを展開」「このツリーを収縮」「この階層をすべて展開」を選択可能
-
-### プラグイン設定
-
-| 設定項目 | 説明 |
-|----------|------|
-| サーバー処理モード | 高速だが他プラグインと競合の可能性あり（デフォルト：有効） |
-| デフォルトですべて展開 | 初回表示時にすべての子チケットを展開 |
-| 収縮させるトラッカー | 指定したトラッカーはデフォルトで折りたたむ（すべて展開が有効時のみ） |
-
-### ユーザー設定
-
-- 「デフォルトでツリーを展開する時の子チケット数上限」を個人設定で変更可能
+詳細は [こちら](https://github.com/RedminePower/redmine_studio_plugin/blob/master/docs/subtask_list_accordion.md) をご覧ください。
 
 ## 対応バージョン
 
@@ -47,18 +29,19 @@ Redmine のインストール先はお使いの環境によって異なります
 
 以下を実行し、Redmine を再起動してください。
 
-```
-$ cd /var/lib/redmine/plugins
-$ git clone https://github.com/RedminePower/redmine_subtask_list_accordion.git
-$ bundle exec rake redmine:plugins:migrate RAILS_ENV=production
+```bash
+cd /var/lib/redmine/plugins
+git clone https://github.com/RedminePower/redmine_subtask_list_accordion.git
+cd /var/lib/redmine
+bundle exec rake redmine:plugins:migrate RAILS_ENV=production
 ```
 
 ## アンインストール
 
 以下を実行し、Redmine を再起動してください。
 
-```
-$ cd /var/lib/redmine
-$ bundle exec rake redmine:plugins:migrate NAME=redmine_subtask_list_accordion VERSION=0 RAILS_ENV=production
-$ rm -rf plugins/redmine_subtask_list_accordion
+```bash
+cd /var/lib/redmine
+bundle exec rake redmine:plugins:migrate NAME=redmine_subtask_list_accordion VERSION=0 RAILS_ENV=production
+rm -rf plugins/redmine_subtask_list_accordion
 ```
